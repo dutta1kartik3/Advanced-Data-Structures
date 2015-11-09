@@ -1,3 +1,6 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 struct TrieNode {
     int isleaf;
 	char value;
@@ -8,7 +11,9 @@ struct TrieNode {
 /** Initialize your data structure here. */
 struct TrieNode* trieCreate() {
     struct TrieNode* root=(struct TrieNode*)malloc(sizeof(struct TrieNode));
-	for(int i=0;i<26;i++)
+	root->value=':';
+	int i;
+	for(i=0;i<26;i++)
 	{
 		root->children[i]=NULL;
 	}
@@ -25,10 +30,6 @@ void insert(struct TrieNode* temp, char* str) {
 		{
 			temp->children[index]=(struct TrieNode*)malloc(sizeof(struct TrieNode));
 			temp->children[index]->value=str[i];
-			for(int i=0;i<26;i++)
-			{
-			    temp->children[index]->children[i]=NULL;
-			}
 			if(i==strlen(str)-1)
 			{
 				temp->children[index]->isleaf=1;
@@ -43,10 +44,6 @@ void insert(struct TrieNode* temp, char* str) {
 		else
 		{
 			i++;
-			if(i==strlen(str))
-			{
-			    temp->children[index]->isleaf=1;
-			}
 			temp=temp->children[index];
 		}
 	}
@@ -54,7 +51,7 @@ void insert(struct TrieNode* temp, char* str) {
 }
 
 /** Returns if the word is in the trie. */
-bool search(struct TrieNode* root, char* str) {
+int search(struct TrieNode* root, char* str) {
     int i=0;
 	while(i<strlen(str) && root!=NULL)
 	{
@@ -67,8 +64,11 @@ bool search(struct TrieNode* root, char* str) {
 		{
 			i++;
 			if(i==strlen(str) && root->children[index]->isleaf==0)
+
 			{
-			    return 0;
+
+				return 0;
+
 			}
 			root=root->children[index];
 		}
@@ -81,7 +81,7 @@ bool search(struct TrieNode* root, char* str) {
 
 /** Returns if there is any word in the trie 
     that starts with the given prefix. */
-bool startsWith(struct TrieNode* root, char* prefix) {
+int startsWith(struct TrieNode* root, char* prefix) {
     int i=0;
 	while(i<strlen(prefix) && root!=NULL)
 	{
@@ -97,7 +97,10 @@ bool startsWith(struct TrieNode* root, char* prefix) {
 		}
 	}
 	if(i<strlen(prefix))
-	return 0;
+	{
+//		printf("gg");
+		return 0;
+	}
 	return 1;
     
     
@@ -107,7 +110,8 @@ bool startsWith(struct TrieNode* root, char* prefix) {
 void trieFree(struct TrieNode* root) {
     if(root!=NULL)
     {
-        for(int i=0;i<26;i++)
+	    int i;
+        for(i=0;i<26;i++)
         {
             trieFree(root->children[i]);
         }
@@ -116,8 +120,14 @@ void trieFree(struct TrieNode* root) {
     
 }
 
+int main()
+{
+
 // Your Trie object will be instantiated and called as such:
-// struct TrieNode* node = trieCreate();
-// insert(node, "somestring");
-// search(node, "key");
+ struct TrieNode* node = trieCreate();
+ insert(node, "ab");
+printf("%d",search(node, "a"));
+printf("%d",startsWith(node,"a"));
 // trieFree(node);
+return 0;
+}
